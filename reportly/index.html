@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Build and export weekly narrative reports" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <title>Reportly</title>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+      body { margin: 0; }
+      input:focus, textarea:focus { border-color: #6366f1 !important; box-shadow: 0 0 0 3px #6366f118 !important; }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
