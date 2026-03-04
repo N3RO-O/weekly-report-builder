@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { supabase } from "./lib/supabase";
 import { LoginPage } from "./components/auth/LoginPage";
 import { Dashboard } from "./components/dashboard/Dashboard";
 import { ReportEditor } from "./components/editor/ReportEditor";
@@ -62,3 +62,19 @@ export default function App() {
     />
   );
 }
+// Inside App():
+const [user, setUser] = useState(null);
+
+useEffect(() => {
+  // Get current session on load
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    setUser(session?.user ?? null);
+  });
+
+  // Listen for login/logout
+  const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    (_, session) => setUser(session?.user ?? null)
+  );
+
+  return () => subscription.unsubscribe();
+}, []);

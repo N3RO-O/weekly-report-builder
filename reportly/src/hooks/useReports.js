@@ -1,50 +1,68 @@
-import { useState } from "react";
-import { SAMPLE_REPORTS, DEFAULT_REPORT, DEFAULT_WEEK } from "../constants/defaults";
+import { useState, useEffect } from "react";
+import { supabase } from "../lib/supabase";
+import { DEFAULT_WEEK } from "../constants/defaults";
 import { totalHours } from "../lib/helpers";
-// import { supabase } from "../lib/supabase"; // ← uncomment when ready
+import { uid } from "../lib/helpers";
 
 export function useReports(user) {
-  const [reports, setReports] = useState(SAMPLE_REPORTS);
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // ── When wiring Supabase, replace useState above with: ───────────────────
-  // const [reports, setReports] = useState([]);
-  // useEffect(() => {
-  //   supabase.from("reports").select("*").eq("user_id", user.id)
-  //     .then(({ data }) => setReports(data || []));
-  // }, [user.id]);
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("reports")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("updated_at", { ascending: false })
+      .then(({ data }) => { setReports(data || []); setLoading(false); });
+  }, [user?.id]);
 
   const openReport = (id) => {
     setReports(prev =>
-      prev.map(r => r.id === id && !r.weeks?.length ? { ...r, weeks: [DEFAULT_WEEK(1)] } : r)
+      prev.map(r => r.id === id && !r.weeks?.length
+        ? { ...r, weeks: [DEFAULT_WEEK(1)] } : r)
     );
   };
 
-  const createReport = () => {
-    const r = DEFAULT_REPORT(user.id);
-    setReports(prev => [r, ...prev]);
-    // supabase.from("reports").insert(r); // ← Supabase
-    return r.id;
+  const createReport = async () => {
+    const r = {
+      user_id: user.id,
+      title: "Untitled Report",
+      weeks: [DEFAULT_WEEK(1)],
+      share_id: uid(),
+      week_count: 1,
+      total_hours: 0,
+      updated_at: new Date().toISOString().slice(0, 10),
+    };
+    const { data } = await supabase.from("reports").insert(r).select().single();
+    setReports(prev => [data, ...prev]);
+    return data.id;
   };
 
-  const updateReport = (updated) => {
-    setReports(prev =>
-      prev.map(r => r.id === updated.id
-        ? { ...updated, weekCount: updated.weeks.length, totalHours: totalHours(updated.weeks) }
-        : r
-      )
-    );
-    // supabase.from("reports").upsert(updated); // ← Supabase
+  const updateReport = async (updated) => {
+    setReports(prev => prev.map(r => r.id === updated.id
+      ? { ...updated, week_count: updated.weeks.length, total_hours: totalHours(updated.weeks) }
+      : r
+    ));
+    await supabase.from("reports").update({
+      title: updated.title,
+      weeks: updated.weeks,
+      week_count: updated.weeks.length,
+      total_hours: totalHours(updated.weeks),
+      updated_at: new Date().toISOString().slice(0, 10),
+    }).eq("id", updated.id);
   };
 
-  const deleteReport = (id) => {
+  const deleteReport = async (id) => {
     setReports(prev => prev.filter(r => r.id !== id));
-    // supabase.from("reports").delete().eq("id", id); // ← Supabase
+    await supabase.from("reports").delete().eq("id", id);
   };
 
-  const renameReport = (id, title) => {
+  const renameReport = async (id, title) => {
     setReports(prev => prev.map(r => r.id === id ? { ...r, title } : r));
-    // supabase.from("reports").update({ title }).eq("id", id); // ← Supabase
+    await supabase.from("reports").update({ title }).eq("id", id);
   };
 
-  return { reports, openReport, createReport, updateReport, deleteReport, renameReport };
+  return { reports, loading, openReport, createReport, updateReport, deleteReport, renameReport };
 }
