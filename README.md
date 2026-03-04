@@ -1,30 +1,106 @@
-# Weekly Narrative Report Builder
+# 📋 Weekly Narrative Report Builder
 
-Build, manage, and export weekly narrative reports as PDF — fully frontend, no backend needed.
+A clean, frontend-only web app for building and exporting weekly narrative reports as PDF. Built with React + Vite — no backend, no database, deployable to Vercel in seconds.
 
-## Features
-- Add unlimited weeks and days
-- Mark holidays (auto-zeroes hours)
-- Live hour calculations (total, avg/day, avg/week)
-- Export Full Report PDF — all weeks, daily logs, summaries
-- Export Summary PDF — hours table + weekly summaries only
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Built with](https://img.shields.io/badge/built%20with-React%20%2B%20Vite-61dafb.svg)
+![Deploy](https://img.shields.io/badge/deploy-Vercel-black.svg)
 
-## Deploy to Vercel (3 steps)
+---
+
+## ✨ Features
+
+- **Multiple weeks & days** — add as many weeks as your internship/project needs
+- **Holiday support** — mark days as holidays, hours auto-zero
+- **Live calculations** — total hours, avg per day, avg per week, cumulative
+- **Daily log** — tasks, experiences, and reflections per day
+- **Weekly summaries** — summary, challenges, skills improved, lessons learned
+- **Export Full PDF** — complete report with every day and every detail
+- **Export Summary PDF** — hours breakdown table + weekly summaries only
+- **No backend needed** — everything runs in the browser via jsPDF
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+
+### Install & Run Locally
 
 ```bash
-# 1. Install dependencies
+# Clone the repo
+git clone https://github.com/N3RO-O/weekly-report-builder.git
+cd weekly-report-builder
+
+# Install dependencies
 npm install
 
-# 2. Test locally
+# Start dev server
 npm run dev
-
-# 3. Deploy
-npx vercel deploy
 ```
 
-Or connect the repo to Vercel dashboard — it auto-detects Vite.
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-## Tech
-- React 18 + Vite
-- jsPDF (loaded from CDN, no install needed)
-- Zero backend, zero database
+### Build for Production
+
+```bash
+npm run build
+```
+
+Output goes to the `dist/` folder.
+
+---
+
+## ☁️ Deploy to Vercel
+
+**Option 1 — CLI**
+```bash
+npm install -g vercel
+vercel deploy
+```
+
+**Option 2 — GitHub Integration (recommended)**
+1. Push this repo to GitHub
+2. Go to [vercel.com](https://vercel.com) → **Add New Project**
+3. Import `weekly-report-builder` from GitHub
+4. Vercel auto-detects Vite — hit **Deploy**
+
+Every `git push` to `main` auto-deploys. No config needed.
+
+---
+
+## 🗂️ Project Structure
+
+```
+weekly-report-builder/
+├── src/
+│   ├── App.jsx        # Main application
+│   └── main.jsx       # React entry point
+├── index.html
+├── vite.config.js
+├── vercel.json        # Vercel deployment config
+├── package.json
+├── .gitignore
+├── LICENSE
+└── README.md
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Tech |
+|---|---|
+| Framework | React 18 |
+| Bundler | Vite 5 |
+| PDF Export | jsPDF (CDN, no install) |
+| Styling | Inline styles + Google Fonts |
+| Deployment | Vercel |
+
+---
+
+## 📄 License
+
+MIT © 2026 [Nero](https://github.com/N3RO-O)
